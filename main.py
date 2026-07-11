@@ -230,7 +230,7 @@ if submitted:
     if not skills_input.strip():
         st.error("Please select at least one skill before analyzing.")
     else:
-        with st.spinner("Analyzing your profile against the job market..."):
+        with st.spinner("Analyzing your profile against the job market... (first request after inactivity may take up to a minute while the server wakes up)"):
             try:
                 response = requests.post(
                     FLASK_API_URL,
@@ -239,7 +239,7 @@ if submitted:
                         "experience": experience,
                         "rating_pref": rating_pref,
                     },
-                    timeout=30,
+                    timeout=90,
                 )
 
                 if response.status_code == 200:
@@ -247,22 +247,22 @@ if submitted:
 
                     st.success("Analysis complete!")
 
-                    #Predicted Role + Salary
+                    # ---- Predicted Role + Salary ----
                     col1, col2 = st.columns(2)
                     with col1:
                         st.metric("Predicted Role", data["predicted_role"])
                     with col2:
-                        st.metric("Expected Salary", f"{data['predicted_salary']:,.0f} / yr")
+                        st.metric("Expected Salary", f"₹{data['predicted_salary']:,.0f} / yr")
 
-                    #Explanation
-                    st.markdown('<div class="section-header"> AI Career Insight</div>', unsafe_allow_html=True)
+                    # ---- Explanation ----
+                    st.markdown('<div class="section-header">📝 AI Career Insight</div>', unsafe_allow_html=True)
                     st.markdown(
                         f'<div class="explanation-box">{data["explanation"]}</div>',
                         unsafe_allow_html=True,
                     )
 
-                    #Top Companies
-                    st.markdown('<div class="section-header"> Top Hiring Companies</div>', unsafe_allow_html=True)
+                    # ---- Top Companies ----
+                    st.markdown('<div class="section-header">🏢 Top Hiring Companies</div>', unsafe_allow_html=True)
                     companies = data.get("top_companies", [])
 
                     if companies:
@@ -273,9 +273,9 @@ if submitted:
                                     <span class="rank-badge">#{i}</span>
                                     <span class="company-name">{c['company']}</span>
                                     <div class="company-meta">
-                                         {c['avg_rating']:.1f} rating &nbsp;|&nbsp;
-                                         rs {c['avg_salary']:,.0f} avg salary &nbsp;|&nbsp;
-                                         {c['job_count']} open role(s)
+                                        ⭐ {c['avg_rating']:.1f} rating &nbsp;|&nbsp;
+                                        💰 ₹{c['avg_salary']:,.0f} avg salary &nbsp;|&nbsp;
+                                        📋 {c['job_count']} open role(s)
                                     </div>
                                 </div>
                                 """,
@@ -289,7 +289,14 @@ if submitted:
 
             except requests.exceptions.ConnectionError:
                 st.error(
-                    "error occur"
+                    "Could not connect to the backend server. It may be temporarily "
+                    "down — please try again in a minute."
+                )
+            except requests.exceptions.Timeout:
+                st.error(
+                    "The backend took too long to respond (it may have been "
+                    "'asleep' after inactivity). Please click Analyze again — "
+                    "it should be fast now that the server is awake."
                 )
             except Exception as e:
                 st.error(f"Something went wrong: {e}")
