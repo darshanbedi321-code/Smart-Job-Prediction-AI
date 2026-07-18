@@ -27,23 +27,24 @@ def generate_explanation(result, user_skills):
             f"Avg Salary: ₹{row['avg_salary']:.0f})\n"
         )
 
-    prompt = f"""Tum ek friendly career advisor ho jo Indian tech job market samajhte ho.
+    prompt = f"""You are a friendly career advisor who understands the Indian tech job market.
 
-User ki skills: {user_skills}
+User's skills: {user_skills}
 
-Analysis ke results:
+Analysis results:
 - Predicted job role: {predicted_role}
-- Predicted average salary: rs{predicted_salary:.0f} per year
+- Predicted average salary: Rs {predicted_salary:.0f} per year
 - Top matching companies:
 {companies_text}
 
-Is data ke basis pe user ko ek short, friendly, encouraging explanation do (150-200 words mein) jisme:
-1. Unki skills ke basis pe ye role kyun suit karta hai
-2. Salary ka context (ye achha hai, average hai, ya improve ho sakta hai)
-3. Top companies mein se konsi sabse achhi lagti hai aur kyun
-4. Ek chhota actionable tip (jaise koi skill add karo to better opportunities milengi)
+Based on this data, write a short, friendly, encouraging explanation in **English only** (150-200 words) that covers:
+1. Why this role suits them based on their skills
+2. Context on the salary (is it good, average, or could it improve)
+3. Which of the top companies seems best and why
+4. One small actionable tip (e.g. adding a particular skill would open up better opportunities)
 
-Simple, conversational tone use karo, jaise ek dost advice de raha ho."""
+Use a simple, conversational tone, as if a friend is giving advice.
+Do not use any language other than English."""
 
     try:
         response = client.chat.completions.create(
