@@ -2,7 +2,7 @@
 
 An end-to-end AI-powered career analysis tool that predicts job roles, estimates expected salary, and generates personalized career insights using Machine Learning and LLM-based explanations — trained on real-world data scraped from AmbitionBox.
 
-**🔗 Live App:** [smart-job-prediction.streamlit.app](https://smart-job-prediction.streamlit.app)
+**🔗 Live App:** [smart-job-prediction.streamlit.app](https://smart-job-prediction-ai.streamlit.app/)
 
 ---
 
